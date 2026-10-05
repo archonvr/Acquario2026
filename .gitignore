@@ -1,0 +1,30 @@
+
+# Apple signing credentials
+*.p12
+*.p8
+*.mobileprovision
+.env
+.env.*
+
+# Local Xcode files
+DerivedData/
+build/
+*.xcarchive/
+*.ipa
+xcuserdata/
+
+# Credenziali
+*.p12
+*.p8
+*.mobileprovision
+.env
+.env.*
+
+# File locali Xcode e archivi
+DerivedData/
+build/
+xcuserdata/
+*.xcuserstate
+*.xcarchive/
+*.ipa
+.DS_Store
