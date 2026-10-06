@@ -1,0 +1,65 @@
+workflows:
+  ios-testflight:
+    name: Acquario 2026 - TestFlight interno
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    integrations:
+      app_store_connect: "ArchonVR - CodeMagic"
+
+    environment:
+      xcode: latest
+
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.ArchonVR.acquario2026
+
+      vars:
+        XCODE_PROJECT: "Unity-iPhone.xcodeproj"
+        XCODE_SCHEME: "Unity-iPhone"
+        BUILD_NUMBER: "1"
+
+    scripts:
+      - name: Download Git LFS files
+        script: |
+          set -e
+          git lfs pull
+          git lfs fsck
+
+      - name: Check Xcode project
+        script: |
+          set -e
+          cd "$CM_BUILD_DIR"
+          test -d "$XCODE_PROJECT"
+          xcodebuild -list -project "$XCODE_PROJECT"
+
+      - name: Configure signing for internal testing
+        script: |
+          set -e
+          xcode-project use-profiles \
+            --custom-export-options='{"testFlightInternalTestingOnly": true}'
+
+      - name: Set build number
+        script: |
+          set -e
+          cd "$CM_BUILD_DIR"
+          agvtool new-version -all "$BUILD_NUMBER"
+
+      - name: Archive and export IPA
+        script: |
+          set -e
+          cd "$CM_BUILD_DIR"
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
