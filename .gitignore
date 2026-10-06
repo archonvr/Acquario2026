@@ -8,7 +8,7 @@
 
 # Local Xcode files
 DerivedData/
-build/
+/build/
 *.xcarchive/
 *.ipa
 xcuserdata/
