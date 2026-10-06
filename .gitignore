@@ -22,7 +22,7 @@ xcuserdata/
 
 # File locali Xcode e archivi
 DerivedData/
-build/
+/build/
 xcuserdata/
 *.xcuserstate
 *.xcarchive/
